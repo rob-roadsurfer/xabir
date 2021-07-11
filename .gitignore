@@ -25,6 +25,6 @@ legacy/autovermietung_roadsurfergmbh*
 /tmp
 /.idea/*
 /docker/data/
-.env
+
 
 
