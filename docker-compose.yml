@@ -1,0 +1,46 @@
+version: "3.4"
+
+services:
+  db:
+    image: mariadb:10.4.11
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASS}
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./docker/data/db:/var/lib/mysql
+    user: "1000:1000"
+    ulimits:
+      core:
+        hard: 0
+        soft: 0
+
+  symfony:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    tty: true
+#    env_file:
+#      - ./.env
+    ports:
+      - "8080:80"
+      - "8081:443"
+    volumes:
+      - .:/var/www/app
+    restart: always
+    command: >
+      sh -c   "composer install --prefer-dist  &&
+              /usr/sbin/apache2ctl -DFOREGROUND"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_ROOT_PASS}
+    ports:
+      - "8082:80"
