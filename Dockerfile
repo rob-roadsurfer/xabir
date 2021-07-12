@@ -40,13 +40,7 @@ COPY --from=composer:2.0.13 /usr/bin/composer /usr/bin/composer
 
 # conf Apache2
 RUN a2enmod proxy_fcgi ssl rewrite proxy proxy_http proxy_ajp \
-    && echo "ServerName localhost" >> /etc/apache2/apache2.conf  \
-    && mkdir -p /etc/apache2/ssl/app/ \
-    && chmod 755 /etc/apache2/ssl/app/
-
-COPY docker/apache/certificates/cert.crt \
-     docker/apache/certificates/cert.key \
-     /etc/apache2/ssl/app/
+    && echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 COPY docker/php/php.ini /usr/local/etc/php/php.ini
 COPY docker/apache/vhosts/sf.conf /etc/apache2/sites-available/sf.conf
